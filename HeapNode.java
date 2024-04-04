@@ -2,7 +2,7 @@ public class HeapNode<E> {
     E element;
     HeapNode<E> left;
     HeapNode<E> right;
-    HeapNode<E> parent; // referencia al nodo padre
+    HeapNode<E> parent;
 
     public HeapNode(E element, HeapNode<E> parent) {
         this.element = element;

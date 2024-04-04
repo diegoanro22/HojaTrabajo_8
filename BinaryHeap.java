@@ -40,7 +40,6 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     private HeapNode<E> findNode(int index) {
         String path = Integer.toBinaryString(index);
         HeapNode<E> node = root;
-        // Empezar en el segundo caracter, ya que el primero es siempre 1 en un árbol completo
         for (int i = 1; i < path.length() - 1; i++) {
             if (path.charAt(i) == '0') {
                 node = node.left;
@@ -54,44 +53,44 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     @Override
     public E remove() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Heap is empty.");
+            throw new NoSuchElementException("Esta vacio");
         }
-        E removedElement = root.element;
+        E valueToRemove = root.element;
+    
         if (size == 1) {
             root = null;
         } else {
-            // Mover el último elemento a la raíz
             HeapNode<E> lastNode = findNode(size);
-            root.element = lastNode.element;
-            // Eliminar la referencia del último nodo
-            if ((size % 2) == 0) {
-                lastNode.parent.left = null;
-            } else {
-                lastNode.parent.right = null;
+            root.element = lastNode.element; 
+            
+            if (lastNode.parent != null) {
+                if (lastNode.parent.left == lastNode) {
+                    lastNode.parent.left = null;
+                } else {
+                    lastNode.parent.right = null;
+                }
             }
-            // Restaurar las propiedades del heap
+    
             siftDown(root);
         }
+    
         size--;
-        return removedElement;
+        return valueToRemove;
     }
 
-    private void siftDown(HeapNode<E> node) {
-        while (node != null) {
-            HeapNode<E> smallest = node;
-            if (node.left != null && node.left.element.compareTo(smallest.element) < 0) {
-                smallest = node.left;
+    public void siftDown(HeapNode<E> node) {
+        while (node.left != null) { 
+            HeapNode<E> smallerChild = node.left;
+            if (node.right != null && node.right.element.compareTo(node.left.element) < 0) {
+                smallerChild = node.right;
             }
-            if (node.right != null && node.right.element.compareTo(smallest.element) < 0) {
-                smallest = node.right;
-            }
-            if (smallest != node) {
+            if (smallerChild.element.compareTo(node.element) < 0) {
                 E temp = node.element;
-                node.element = smallest.element;
-                smallest.element = temp;
-                node = smallest;
+                node.element = smallerChild.element;
+                smallerChild.element = temp;
+                node = smallerChild;
             } else {
-                break; // El nodo está en la posición correcta
+                break; 
             }
         }
     }
